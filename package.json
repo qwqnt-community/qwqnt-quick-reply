@@ -1,29 +1,43 @@
 {
-  "name": "llqqnt-quick-reply",
-  "version": "1.1.1",
+  "$schema": "https://raw.githubusercontent.com/QwQ-002/types/main/plugin.schema.json",
+  "name": "qwqnt-quick_reply",
+  "version": "1.0.0",
   "description": "添加快捷回复语，重复打字滚！",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint --cache --fix ./src/**/*.{js,cjs,mjs,ts,jsx,tsx}",
+    "lint": "oxlint --fix --tsconfig ./tsconfig.json --type-aware src/**/*.js,src/**/*.ts",
     "build": "electron-vite build"
   },
-  "author": "Adpro",
+  "author": "風間青祢",
   "license": "GPL-3.0-only",
   "devDependencies": {
-    "@electron-toolkit/eslint-config-ts": "^2.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
-    "@types/eslint__eslintrc": "^2.1.2",
-    "@types/eslint__js": "^8.42.3",
-    "@typescript-eslint/eslint-plugin": "8.2.0",
-    "@typescript-eslint/parser": "8.2.0",
-    "electron": "^32.0.1",
-    "electron-vite": "^2.3.0",
-    "eslint": "^9.9.1",
-    "unplugin-zip-pack": "1.0.3-beta.0",
-    "vite": "^5.4.2",
-    "vite-plugin-checker": "^0.7.2",
-    "vite-plugin-cp": "^4.0.8"
+    "@qwqnt/types": "github:QwQ-002/types",
+    "@types/node": "^24.3.3",
+    "electron": "^38.1.0",
+    "electron-vite": "^4.0.0",
+    "oxlint": "^1.15.0",
+    "unplugin-oxlint": "^0.7.5",
+    "unplugin-zip-pack": "^1.0.3",
+    "vite": "^7.1.5",
+    "vite-plugin-cp": "^6.0.3"
   },
-  "packageManager": "pnpm@9.7.1"
+  "packageManager": "pnpm@10.17.1",
+  "qwqnt": {
+    "name": "快捷回复",
+    "icon": "./assets/icon.svg",
+    "inject": {
+      "main": "./main/index.js",
+      "renderer": "./renderer/index.js"
+    },
+    "dependencies": {
+      "qwqnt-renderer_events": "^1.1.2",
+      "qwqnt-plugin_settings": "^1.2.5",
+      "ipc_interceptor": "^1.0.0"
+    }
+  },
+  "dependencies": {
+    "tinykeys": "^3.0.0"
+  }
 }

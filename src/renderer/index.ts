@@ -1,13 +1,14 @@
-import observeElement from '../utils/observeElement';
-import { log } from '../utils/log';
-import getCurrentUserConfig from '../utils/getCurrentUserConfig';
-import insertEditor from '../utils/insertEditor';
-import parseReplies from '../utils/parseReplies';
+import { createKeybindingsHandler } from 'tinykeys';
+import observeElement from './utils/observeElement';
+import { log } from './utils/log';
+import getCurrentUserConfig from './utils/getCurrentUserConfig';
+import insertEditor from './utils/insertEditor';
+import parseReplies from './utils/parseReplies';
 
-const pluginSlug = 'QuickReply';
+const pluginSlug = (__self.meta.packageJson as IQwQNTPlugin).name;
 
-const barIconClick = async () => {
-  let [_, currentConfig, __] = await getCurrentUserConfig();
+const barIconClick = () => {
+  let [ _, currentConfig ] = getCurrentUserConfig();
 
   if(document.getElementsByClassName('quickReply-reply-list').length == 0){
     const replyList = document.createElement('div');
@@ -29,23 +30,23 @@ const barIconClick = async () => {
 };
 
 const onMessageLoad = async () => {
-  const iconSvg = await (await fetch(`local:///${LiteLoader.plugins[pluginSlug].path.plugin}/assets/barIcon.svg`)).text();
+  const iconSvg = await (await fetch(qwqnt.framework.protocol.pathToStorageUrl(`${__self.meta.path}/assets/barIcon.svg`))).text();
   const qTooltips = document.createElement('div');
   const qTooltipsContent = document.createElement('div');
   const icon = document.createElement('i');
   const barIcon = document.createElement('div');
-  
+
   barIcon.classList.add('quickReply-bar');
   barIcon.appendChild(qTooltips);
-  
+
   qTooltips.classList.add('quickReply-q-tooltips');
   qTooltips.addEventListener('click', barIconClick);
   qTooltips.appendChild(icon);
   qTooltips.appendChild(qTooltipsContent);
-  
+
   qTooltipsContent.classList.add('quickReply-q-tooltips__content');
   qTooltipsContent.innerText = '快捷回复';
-  
+
   icon.classList.add('quickReply-q-icon');
   icon.innerHTML = iconSvg;
 
@@ -55,7 +56,7 @@ const onMessageLoad = async () => {
 
 const style = document.createElement('link');
 style.rel = 'stylesheet';
-style.href = `local:///${LiteLoader.plugins[pluginSlug].path.plugin}/style/global.css`;
+style.href = qwqnt.framework.protocol.pathToStorageUrl(`${__self.meta.path}/style/global.css`);
 document.head.appendChild(style);
 log('加载样式文件完成');
 
@@ -65,47 +66,47 @@ document.body.addEventListener('mousedown', (e) => {
   }
 });
 
-document.body.addEventListener('keydown', async (e) => {
-  const key = e.key;
-  // 监听快捷键
-  // 添加回复语
-  // 大小写需要同时监听
-  if((key == 'a' || key == 'A') && e.altKey){
+const keyHandler = createKeybindingsHandler({
+  'Alt+A': () => {
     const selected = window.getSelection()?.toString();
     if(selected){
-      let [userConfig, currentConfig, currentConfigIndex] = await getCurrentUserConfig();
+      let [ userConfig, currentConfig, currentConfigIndex ] = getCurrentUserConfig();
       currentConfig.messages.push(selected);
       userConfig.data[currentConfigIndex] = currentConfig;
-      await LiteLoader.api.config.set(pluginSlug, userConfig);
+      PluginSettings.renderer.writeConfig(pluginSlug, userConfig);
     }
-  }
-  else if(key.startsWith('F') && key.length > 1){
-    const index = Number(key.substring(1));
-    let [_, currentConfig, __] = await getCurrentUserConfig();
+  },
+  'Alt+([1-9])': event => {
+    const index = Number(event.key);
+    let [ _, currentConfig ] = getCurrentUserConfig();
     if(index <= currentConfig.messages.length) insertEditor(currentConfig.messages[index - 1]);
-  }
+  },
 });
+
+document.body.addEventListener('keydown', keyHandler);
 
 observeElement('.chat-func-bar', async () => {
   if(document.getElementsByClassName('quickReply-bar').length == 0) await onMessageLoad();
 }, true);
 
-export const onSettingWindowCreated = async (view: HTMLElement) => {
-  let [_, currentConfig, __] = await getCurrentUserConfig();
-  view.innerHTML = await (await fetch(`local:///${LiteLoader.plugins[pluginSlug].path.plugin}/pages/settings.html`)).text();
+RendererEvents.onSettingsWindowCreated(async () => {
+  const view = await PluginSettings.renderer.registerPluginSettings(__self.meta.packageJson as IQwQNTPlugin);
 
-  (view.querySelector('#pluginVersion') as HTMLParagraphElement).innerHTML = LiteLoader.plugins[pluginSlug].manifest.version;
+  let [ _, currentConfig ] = getCurrentUserConfig();
+  view.innerHTML = await (await fetch(qwqnt.framework.protocol.pathToStorageUrl(`${__self.meta.path}/pages/settings.html`))).text();
+
+  (view.querySelector('#pluginVersion') as HTMLParagraphElement).innerHTML = (__self.meta.packageJson as IQwQNTPlugin).version;
 
   currentConfig.messages.forEach((message) => {
     (view.querySelector('#setReplies') as HTMLTextAreaElement).value += `[[${message}]]\n`;
   });
 
   (view.querySelector('#setReplies') as HTMLTextAreaElement).addEventListener('change', async () => {
-    const [userConfig, currentConfig, currentConfigIndex] = await getCurrentUserConfig();
+    const [userConfig, currentConfig, currentConfigIndex] = getCurrentUserConfig();
     await parseReplies((view.querySelector('#setReplies') as HTMLTextAreaElement).value, userConfig, currentConfig, currentConfigIndex);
   });
 
   (view.querySelector('#github') as HTMLButtonElement).addEventListener('click', () => {
-    LiteLoader.api.openExternal('https://github.com/adproqwq/LiteLoaderQQNT-QuickReply');
+    PluginSettings.renderer.openExternal('https://github.com/QwQ-002/QwQNT-QuickReply');
   });
-};
+});

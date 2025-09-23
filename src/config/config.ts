@@ -1,18 +1,20 @@
 export const config: IConfig = {
+  currentUid: '-1',
   data: [
     {
-      uin: '-1',
+      uid: '-1',
       messages: [],
     },
   ],
 };
 
 export interface ISettingConfig {
-  uin: string;
+  uid: string;
 
   messages: string[];
 };
 
 export interface IConfig {
+  currentUid: string;
   data: ISettingConfig[];
 };

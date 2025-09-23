@@ -1,12 +1,10 @@
-# LiteLoaderQQNT-QuickReply
+# QwQNT-QuickReply
 
-本插件依赖：`插件检测更新API`插件，请先安装这个插件！
+本插件依赖：`RendererEvents` 、`PluginSettings` 和 `IpcInterceptor` 插件，请先安装！
 
 请勿直接使用源码，需要下载Release包使用！
 
 ## 如何使用
-
-本插件所有功能在QQ频道内不生效！
 
 ### 回复
 
@@ -16,7 +14,7 @@
 
 更改回复语可以在插件设置页进行，设置页的文本框中会出现你目前的所有回复语。你可以新增、修改或删除。
 
-每条回复语使用`[[...]]`双中括号包裹，这称为回复语块。回复语块内可以任意换行，但在回复语块开头换行会被忽略。**特别注意：在回复语块中，若要使用`]]`这样的文本，请使用转义符转义，变成这样：`\]\]`。**文本框失焦后会自动保存，请确保让文本框失焦后再关闭设置。
+每条回复语使用`[[...]]`双中括号包裹，这称为回复语块。回复语块内可以任意换行。 **特别注意：在回复语块中，若要使用 `[[` 和 `]]` 这两个文本，请使用转义符转义，变成这样：`\[\[` 和这样 `\]\]`。** 文本框失焦后会自动保存，请确保让文本框失焦后再关闭设置。
 
 ### 快捷键
 
@@ -24,11 +22,13 @@
 
 新增回复语的话，本插件提供了`Alt+A`（Mac为`Option+A`）的快捷键。只要选中文字，再按下`Alt+A`，即可添加回复语。
 
+在腾讯频道中，该快捷键仍然可用。
+
 #### 快捷插入
 
-Windows、Linux、MacOS可以使用`F1-F12`快捷插入回复语，比如`F1`就是插入第1条回复语。
+Windows、Linux、MacOS可以使用`Alt+数字键`快捷插入回复语，比如`Alt+1`就是插入第1条回复语。
 
-请注意：可以放心使用`Chii DevTools`、`JustF5`等使用这些键位的插件，冲突键位的功能将会同时触发。
+请注意：腾讯频道将无法使用该快捷键。
 
 ## 鸣谢
 * [LiteLoaderQQNT](https://github.com/LiteLoaderQQNT/LiteLoaderQQNT/)
@@ -39,7 +39,7 @@ Windows、Linux、MacOS可以使用`F1-F12`快捷插入回复语，比如`F1`就
 ## License
 ```
     LiteLoaderQQNT-QuickReply
-    Copyright (C) 2024  Adpro
+    Copyright (C) 2025  風間青祢
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

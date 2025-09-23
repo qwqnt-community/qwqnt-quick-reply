@@ -1,141 +1,53 @@
 /// <reference types="vite/client" />
 
-declare interface ILiteLoaderManifestConfig {
-  manifest_version: 4;
+declare namespace RendererEvents {
+  const onLogin: (callback: (uid?: string) => void) => void;
+  const onSettingsWindowCreated: (callback: () => void) => void;
+}
 
-  type?: 'extension' | 'theme' | 'framework';
-
+interface IQwQNTPlugin {
   name: string;
-
-  slug: string;
-
-  description: string;
-
   version: string;
-
-  icon?: string | null;
-
-  thumb?: string | null;
-
-  authors: ILiteLoaderManifestAuthorsConfig[];
-
-  dependencies?: string[];
-
-  platform: [
-    'win32'?,
-    'linux'?,
-    'darwin'?,
-  ];
-
-  injects: {
-    main?: string;
-
-    preload?: string;
-
-    renderer?: string;
-  };
-
-  repository?: {
-    repo: string;
-
-    branch: string;
-
-    release?: {
-      tag: string;
-
-      file?: string;
-    }
+  qwqnt?: {
+    name?: string;
+    icon?: string;
+    inject?: {
+      main?: string;
+      renderer?: string;
+      preload?: string;
+    };
   };
 }
 
-declare interface ILiteLoaderManifestAuthorsConfig {
-  name: string;
+declare namespace PluginSettings {
+  interface ICommon {
+    readConfig: <T>(id: string, defaultConfig?: T) => T;
+    writeConfig: <T>(id: string, newConfig: T) => boolean;
+    openPath: (path: string) => void;
+    openExternal: (url: string) => void;
+  }
+  interface IRenderer extends ICommon {
+    registerPluginSettings: (packageJson: IQwQNTPlugin) => Promise<HTMLDivElement>;
+  }
 
-  link: string;
+  const main: ICommon;
+  const preload: ICommon;
+  const renderer: IRenderer;
 }
 
-declare interface ILLCUMMirror {
-  type: 'total' | 'domain' | 'off';
-  domain: string;
+type Unsubscribe = () => void
+type EventName = string | string[]
+type IpcCallback = (...args: any[]) => void
+
+interface IpcInterceptorType {
+  onIpcReceive(callback: IpcCallback): Unsubscribe;
+  onIpcSend(callback: IpcCallback): Unsubscribe;
+  offIpcReceive(callback: IpcCallback): void;
+  offIpcSend(callback: IpcCallback): void;
+  onIpcReceiveEvents(eventName: EventName, callback: IpcCallback): Unsubscribe;
+  onIpcSendEvents(eventName: EventName, callback: IpcCallback): Unsubscribe;
+  offIpcReceiveEvents(eventName: EventName, callback: IpcCallback): void;
+  offIpcSendEvents(eventName: EventName, callback: IpcCallback): void;
 }
 
-declare namespace LiteLoader {
-  const path: ILiteLoaderPath;
-  const versions: ILiteLoaderVersion;
-  const os: ILiteLoaderOS;
-  const package: ILiteLoaderPackage;
-  const config: {
-    LiteLoader: {
-      disabled_plugins: string[],
-    }
-  };
-  const plugins: Record<string, ILiteLoaderPlugin>;
-  const api: ILiteLoaderAPI;
-
-  interface ILiteLoaderPath {
-    root: string,
-    profile: string,
-    data: string,
-    plugins: string,
-  }
-
-  interface ILiteLoaderVersion {
-    qqnt: string,
-    liteloader: string,
-    node: string,
-    chrome: string,
-    electron: string,
-  }
-
-  interface ILiteLoaderOS {
-    platform: 'win32' | 'linux' | 'darwin',
-  }
-
-  interface ILiteLoaderPackage {
-    liteloader: object,
-    qqnt: object,
-  }
-
-  interface ILiteLoaderPlugin {
-    manifest: ILiteLoaderManifestConfig,
-    incompatible: boolean,
-    disabled: boolean,
-    path: ILiteLoaderPluginPath
-  }
-
-  interface ILiteLoaderPluginPath {
-    plugin: string,
-    data: string,
-    injects: ILiteLoaderPluginPathInject
-  }
-
-  interface ILiteLoaderPluginPathInject {
-    main: string,
-    renderer: string,
-    preload: string,
-  }
-
-  interface ILiteLoaderAPI {
-    openPath: (path: string) => void,
-    openExternal: (url: string) => void,
-    disablePlugin: (slug: string) => void,
-    useMirrors: (slug: string, mirrors: ILLCUMMirror[]) => void,
-    checkUpdate: (slug: string, type?: string) => Promise<boolean | null>,
-    downloadUpdate: (slug: string, url?: string) => Promise<boolean | null>,
-    showRelaunchDialog: (slug: string, showChangeLog?: boolean, changeLogFile?: string) => Promise<void>,
-    config: ILiteLoaderAPIConfig,
-  }
-
-  interface ILiteLoaderAPIConfig {
-    set: <IConfig = unknown>(slug: string, new_config: IConfig) => boolean,
-    get: <IConfig = unknown>(slug: string, default_config?: IConfig) => IConfig | Promise<IConfig>,
-  }
-}
-
-interface Window {
-  app: AppElement;
-}
-
-interface AppElement extends HTMLDivElement {
-  __vue_app__?: any;
-}
+declare const IpcInterceptor: IpcInterceptorType

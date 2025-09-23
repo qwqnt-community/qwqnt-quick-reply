@@ -1,4 +1,4 @@
-import { QQNTEditorElement } from '../types/QQNTEditorElement';
+import { QQNTEditorElement } from '../../types/QQNTEditorElement';
 import { log } from './log';
 
 // From LLAPI

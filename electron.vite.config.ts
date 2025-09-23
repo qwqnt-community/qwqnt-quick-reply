@@ -1,10 +1,10 @@
 import { defineConfig } from 'electron-vite';
 import { defineConfig as defineViteConfig } from 'vite';
 import { resolve } from 'path';
-import viteChecker from 'vite-plugin-checker';
 import viteCp from 'vite-plugin-cp';
+import unpluginOxlint from 'unplugin-oxlint/vite';
 import viteZipPack from 'unplugin-zip-pack/vite';
-import PluginManifest from './manifest.json';
+import Plugin from './package.json';
 
 const SRC_DIR = resolve(__dirname, './src');
 const OUTPUT_DIR = resolve(__dirname, './dist');
@@ -22,11 +22,9 @@ const ConfigBuilder = (type: 'main' | 'preload') => defineViteConfig({
   ...BaseConfig,
 
   plugins: [
-    viteChecker({
-      typescript: true,
-      eslint: {
-        lintCommand: 'eslint --cache --fix ./src/**/*.{js,cjs,mjs,ts,jsx,tsx}',
-      },
+    unpluginOxlint({
+      includes: ['src/**/*.js', 'src/**/*.ts'],
+      fix: true,
     }),
   ],
   build: {
@@ -34,7 +32,7 @@ const ConfigBuilder = (type: 'main' | 'preload') => defineViteConfig({
     outDir: resolve(OUTPUT_DIR, `./${type}`),
     lib: {
       entry: resolve(SRC_DIR, `./${type}/index.ts`),
-      formats: [ 'cjs' ],
+      formats: [ type === 'preload' ? 'cjs' : 'es' ],
       fileName: () => 'index.js',
     },
   },
@@ -47,15 +45,13 @@ export default defineConfig({
     ...BaseConfig,
 
     plugins: [
-      viteChecker({
-        typescript: true,
-        eslint: {
-          lintCommand: 'eslint --cache --fix ./src/**/*.{js,cjs,mjs,ts,jsx,tsx}',
-        },
+      unpluginOxlint({
+        includes: ['src/**/*.js', 'src/**/*.ts'],
+        fix: true,
       }),
       viteCp({
         targets: [
-          { src: './manifest.json', dest: 'dist' },
+          { src: './package.json', dest: 'dist' },
           { src: './assets', dest: 'dist/assets' },
           { src: './changeLog.md', dest: 'dist' },
           { src: './src/style', dest: 'dist/style' },
@@ -64,7 +60,7 @@ export default defineConfig({
       }),
       viteZipPack({
         in: OUTPUT_DIR,
-        out: resolve(__dirname, `./${PluginManifest.slug}.zip`),
+        out: resolve(__dirname, `./${Plugin.name}.zip`),
       }),
     ],
     build: {
