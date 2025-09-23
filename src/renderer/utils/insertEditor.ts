@@ -11,6 +11,7 @@ export default (text: string) => {
   editorModel.change((writer) => {
     const emojiElement = text;
     writer.insert(emojiElement, position);
+    ckeditor.focus();
     log('插入输入框完成');
   });
 };
