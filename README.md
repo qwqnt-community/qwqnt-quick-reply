@@ -38,7 +38,7 @@ Windows、Linux、MacOS可以使用`Alt+数字键`快捷插入回复语，比如
 
 ## License
 ```
-    LiteLoaderQQNT-QuickReply
+    QwQNT-QuickReply
     Copyright (C) 2025  風間青祢
 
     This program is free software: you can redistribute it and/or modify
