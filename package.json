@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/QwQ-002/types/main/plugin.schema.json",
+  "$schema": "https://raw.githubusercontent.com/qwqnt-community/types/main/plugin.schema.json",
   "name": "qwqnt-quick_reply",
   "version": "1.0.0",
   "description": "添加快捷回复语，重复打字滚！",
@@ -12,18 +12,18 @@
   "author": "風間青祢",
   "license": "GPL-3.0-only",
   "devDependencies": {
-    "@electron-toolkit/tsconfig": "^1.0.1",
-    "@qwqnt/types": "github:QwQ-002/types",
-    "@types/node": "^24.3.3",
-    "electron": "^38.1.0",
-    "electron-vite": "^4.0.0",
-    "oxlint": "^1.15.0",
+    "@electron-toolkit/tsconfig": "^2.0.0",
+    "@qwqnt/types": "github:qwqnt-community/types",
+    "@types/node": "^24.10.1",
+    "electron": "^39.2.1",
+    "electron-vite": "^4.0.1",
+    "oxlint": "^1.28.0",
     "unplugin-oxlint": "^0.7.5",
     "unplugin-zip-pack": "^1.0.3",
-    "vite": "^7.1.5",
+    "vite": "^7.2.2",
     "vite-plugin-cp": "^6.0.3"
   },
-  "packageManager": "pnpm@10.17.1",
+  "packageManager": "pnpm@10.22.0",
   "qwqnt": {
     "name": "快捷回复",
     "icon": "./assets/icon.svg",

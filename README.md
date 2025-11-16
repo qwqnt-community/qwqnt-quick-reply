@@ -1,6 +1,6 @@
-# QwQNT-QuickReply
+# qwqnt-quick-reply
 
-本插件依赖：`RendererEvents` 、`PluginSettings` 和 `IpcInterceptor` 插件，请先安装！
+本插件依赖：`qwqnt-renderer-events` 、`qwqnt-plugin-settings` 和 `qwqnt-ipc-interceptor` 插件，请先安装！
 
 请勿直接使用源码，需要下载Release包使用！
 
@@ -38,7 +38,7 @@ Windows、Linux、MacOS可以使用`Alt+数字键`快捷插入回复语，比如
 
 ## License
 ```
-    QwQNT-QuickReply
+    qwqnt-quick-reply
     Copyright (C) 2025  風間青祢
 
     This program is free software: you can redistribute it and/or modify
